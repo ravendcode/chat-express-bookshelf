@@ -1,4 +1,4 @@
-# Chat Socket.io
+# Chat Express Bookshelf
 
 ### Features
 1. ES6
