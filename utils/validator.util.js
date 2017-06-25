@@ -309,7 +309,17 @@ export default class Validator {
       obj[field] = data;
       let self = this;
 
-      return Model.findOne(obj).then((model) => {
+      // Mongo
+      // return Model.findOne(obj).then((model) => {
+      //   if (model) {
+      //     self.errors[field] = {
+      //       message: message,
+      //     };
+      //   }
+      // });
+
+      // Bookshelf
+      return Model.forge(obj).fetch().then((model) => {
         if (model) {
           self.errors[field] = {
             message: message,

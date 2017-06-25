@@ -12,7 +12,7 @@
 	"validation.match %s": "Поле %s имеет ошибочный формат.",
 	"validation.unique %s": "Такое значение поля %s уже существует.",
 	"error.incorrect email or password": "Неверный адрес электронной почты или пароль.",
-  "error.bad request": "Плохой запрос.",
+	"error.bad request": "Плохой запрос.",
 	"error.bad token": "Плохой токен.",
 	"error.not found": "Не найдено.",
 	"error.book not found": "Книга не найдена.",
@@ -28,5 +28,6 @@
 	"model.email": "эл. адрес",
 	"model.password": "пароль",
 	"model.username": "имя пользователя",
+	"model.name": "имя пользователя",
 	"About": "О нас"
 }

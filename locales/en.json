@@ -28,5 +28,6 @@
   "model.email": "email",
   "model.password": "password",
   "model.username": "username",
+  "model.name": "name",
   "About": "About"
 }

@@ -45,10 +45,30 @@ router.patch('/:id', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
   let body = _.pick(req.body, fields);
-
-  User.forge(body).save().then((user) => {
-    res.status(201).send({user});
-  }).catch((e) => next(e));
+  let rules = {
+    name: {
+      required: true,
+      minlength: 2,
+      maxlength: 10,
+      unique: User,
+    },
+    email: {
+      required: true,
+      email: true,
+      maxlength: 100,
+      unique: User,
+    },
+    password: {
+      required: true,
+      minlength: 6,
+      maxlength: 10,
+    },
+  };
+  res.validator.validate(body, rules).then(() => {
+    User.forge(body).save().then((user) => {
+      res.status(201).send({user});
+    });
+  }).catch((e) => res.status(400).send(e));
 });
 
 router.delete('/:id', (req, res, next) => {
