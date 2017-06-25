@@ -7,7 +7,7 @@
 4. I18n
 5. Tests
 6. WebSocket
-7. SQL
+7. Bookshelf
 8. Eslint best standart
 
 ### Usage

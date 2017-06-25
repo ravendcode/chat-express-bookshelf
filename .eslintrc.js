@@ -34,6 +34,6 @@ module.exports = {
     'arrow-parens': 0,
     'no-invalid-this': 0,
     'new-cap': 0,
-    'guard-for-in': 0
+    'guard-for-in': 0,
   }
 }

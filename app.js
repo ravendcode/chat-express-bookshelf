@@ -6,6 +6,8 @@ import i18n from 'i18n';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import hbs from 'hbs';
+// import mongoose from './databases/connections/mongoose';
+import {bookshelf, knex} from './databases/connections/bookshelf';
 import {hbs as hbsUtils, Validator} from './utils';
 import routes from './routes';
 
@@ -59,9 +61,11 @@ if (config.env === 'development') {
   // })
 }
 
-// Middlewares
+// Middleware
 app.use((req, res, next) => {
-  // req.db = db;
+  // req.mdb = mongoose;
+  req.db = bookshelf;
+  req.knex = knex;
   let lang = req.query.lang;
   if (lang !== undefined && config.locales.includes(lang)) {
     res.setLocale(req.query.lang);

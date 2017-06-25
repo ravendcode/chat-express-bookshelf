@@ -10,7 +10,6 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-
   let body = _.pick(req.body, ['title']);
 
   let rules = {
