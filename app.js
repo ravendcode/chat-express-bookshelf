@@ -106,7 +106,7 @@ app.use((err, req, res, next) => {
     message,
     status,
   };
-  if (config.env === 'development' && status !== 404) {
+  if (config.env === 'development' && status !== 404 && status !== 400) {
     error.stack = err.stack;
   }
   res.status(status).send({

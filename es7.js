@@ -19,6 +19,12 @@ class Cat {
   meow() {
     return `${this.name} meow`;
   }
+
+  toJSON() {
+    return {
+      name: this.name,
+    };
+  }
 }
 
 // function readonly(target, key, descriptor) {
@@ -37,4 +43,5 @@ function dec(id) {
 let cat = new Cat();
 console.log(cat.meow());
 // console.log(Cat.tableName);
+console.log(JSON.stringify(cat));
 

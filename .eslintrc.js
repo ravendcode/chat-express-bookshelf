@@ -35,5 +35,6 @@ module.exports = {
     'no-invalid-this': 0,
     'new-cap': 0,
     'guard-for-in': 0,
+    'comma-dangle': 0
   }
 }
