@@ -1,0 +1,113 @@
+import path from 'path';
+import http from 'http';
+import express from 'express';
+import morgan from 'morgan';
+import i18n from 'i18n';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import hbs from 'hbs';
+import {hbs as hbsUtils, Validator} from './utils';
+import routes from './routes';
+
+import config from './config';
+
+const app = express();
+
+if (config.env === 'development') {
+  app.use(morgan('dev'));
+  // redirect http server
+  app.all('*', function (req, res, next) {
+    if (req.secure) {
+      return next();
+    }
+    res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url);
+  });
+  http.createServer(app).listen(config.httpPort);
+}
+
+i18n.configure({
+  locales: config.locales,
+  defaultLocale: config.locale,
+  directory: path.join(__dirname, 'locales'),
+  queryParameter: 'lang',
+  register: global,
+});
+
+// app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(i18n.init);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false,
+}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.set('view engine', 'hbs');
+app.set('view options', {
+  layout: 'layouts/base',
+});
+
+// Handlebars
+hbs.registerPartials(path.join(__dirname, 'views/partials'));
+hbsUtils(hbs);
+hbs.localsAsTemplateData(app);
+
+if (config.env === 'development') {
+  // Seeds
+  // require('./databases/seeds/users.seeder').usersSeeder(() => {
+  //   require('./databases/seeds/todos.seeder').todosSeeder(() => {})
+  // })
+}
+
+// Middlewares
+app.use((req, res, next) => {
+  // req.db = db;
+  let lang = req.query.lang;
+  if (lang !== undefined && config.locales.includes(lang)) {
+    res.setLocale(req.query.lang);
+  } else {
+    res.setLocale(config.locale);
+  }
+
+  res.validator = new Validator(res.__);
+
+  app.locals.app = {
+    env: config.env,
+    httpPort: config.httpPort,
+    httpsPort: config.httpsPort,
+    host: config.host,
+    locale: res.getLocale(),
+  };
+
+  next();
+});
+
+// app.use(require('./middleware/log.middleware').default);
+
+// Routes
+routes(app);
+
+// Catch 404 and forward to error handler
+app.use((req, res, next) => {
+  let err = new Error(req.__('error.not found'));
+  err.status = 404;
+  next(err);
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+  let message = err.message;
+  let status = err.status || 500;
+  let error = {
+    message,
+    status,
+  };
+  if (config.env === 'development' && status !== 404) {
+    error.stack = err.stack;
+  }
+  res.status(status).send({
+    error,
+  });
+});
+
+export default app;
