@@ -12,4 +12,6 @@
 
 ### Usage
 1. `npm i`
-2. `npm run dev`
+2. `npm i -g knex`
+3. `knex migrate:latest`
+4. `npm run dev`
