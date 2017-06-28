@@ -1,3 +1,6 @@
+// require('babel-register');
+// require('babel-polyfill');
+
 const faker = require('faker');
 const _ = require('lodash');
 const moment = require('moment');

@@ -12,7 +12,9 @@ router.get('/', (req, res, next) => {
   // }).catch((e) => next(e));
 
   User.fetchAll().then((users) => {
-    res.send({users});
+    res.send({
+      users
+    });
   }).catch((e) => next(e));
 });
 
@@ -27,20 +29,9 @@ router.get('/:id', (req, res, next) => {
   // User.forge({id: req.params.id}).fetch().then((user) => {
   //   res.send({user});
   // }).catch((e) => next(e));
-  res.send({user: req.user});
-});
-
-router.patch('/:id', (req, res, next) => {
-  let body = _.pick(req.body, fields);
-
-  // User.forge({id: req.params.id}).fetch({require: true}).then((user) => {
-  //   return user.save(body).then(() => {
-  //     res.send({user});
-  //   });
-  // }).catch((e) => next(e));
-  req.user.save(body).then(() => {
-    res.send({user: req.user});
-  }).catch((e) => next(e));
+  res.send({
+    user: req.user
+  });
 });
 
 router.post('/', (req, res, next) => {
@@ -64,9 +55,54 @@ router.post('/', (req, res, next) => {
       maxlength: 10,
     },
   };
+
   res.validator.validate(body, rules).then(() => {
     User.forge(body).save().then((user) => {
-      res.status(201).send({user});
+      res.status(201).send({
+        user
+      });
+    });
+  }).catch((e) => res.status(400).send(e));
+});
+
+router.patch('/:id', (req, res, next) => {
+  let body = _.pick(req.body, fields);
+
+  // User.forge({id: req.params.id}).fetch({require: true}).then((user) => {
+  //   return user.save(body).then(() => {
+  //     res.send({user});
+  //   });
+  // }).catch((e) => next(e));
+
+  let rules = {
+    name: {
+      // required: true,
+      minlength: 2,
+      maxlength: 10,
+      unique: {
+        model: User,
+        value: req.user.toJSON().name
+      },
+    },
+    email: {
+      email: true,
+      maxlength: 100,
+      unique: {
+        model: User,
+        value: req.user.toJSON().email
+      },
+    },
+    password: {
+      minlength: 6,
+      maxlength: 10,
+    },
+  };
+
+  res.validator.validate(body, rules).then(() => {
+    req.user.save(body).then(() => {
+      res.send({
+        user: req.user
+      });
     });
   }).catch((e) => res.status(400).send(e));
 });
@@ -86,7 +122,9 @@ router.delete('/:id', (req, res, next) => {
   // }).catch((e) => next(e));
   req.user.destroy().then(() => {
     return User.fetchAll().then((users) => {
-      res.send({users});
+      res.send({
+        users
+      });
     });
   }).catch((e) => next(e));
 });
@@ -98,15 +136,17 @@ router.param('id', (req, res, next, id) => {
     error.status = 400;
     return next(error);
   }
-  User.forge({id}).fetch().then((user) => {
+  User.forge({
+    id
+  }).fetch().then((user) => {
     if (user === null) {
       let error = new Error(req.__('error.user not found'));
       error.status = 404;
       return next(error);
     }
     req.user = user;
-    return next();
-  }).catch((e) => next(e));
+    next();
+  });
 });
 
 export default router;

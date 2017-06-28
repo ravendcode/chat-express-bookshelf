@@ -1,4 +1,3 @@
-
 require('babel-register');
 require('babel-polyfill');
 
@@ -25,3 +24,4 @@ require('babel-polyfill');
 // console.log(faker.date);
 // console.log(faker.date.recent());
 // console.log(moment(faker.date.recent()).format('YYYY-MM-DD HH:mm:ss'));
+
