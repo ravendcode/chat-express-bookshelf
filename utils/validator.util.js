@@ -1,5 +1,6 @@
 import validator from 'validator';
 import i18n from 'i18n';
+import {ValidationError} from './errors.util';
 
 export default class Validator {
   constructor(__ = i18n.__) {
@@ -20,10 +21,8 @@ export default class Validator {
             message: e[e.field].message
           };
         });
-
-        return Promise.reject({
-          errors: this.errors
-        });
+        let err = new ValidationError(this.errors);
+        return Promise.reject(err);
       }
     });
   }

@@ -3,7 +3,7 @@ import fs from 'fs';
 import {normalizePort} from './utils';
 
 const env = process.env.NODE_ENV || 'development';
-// const env = 'production'
+// const env = 'production';
 const httpPort = 80;
 const httpsPort = normalizePort(process.env.PORT || 443);
 

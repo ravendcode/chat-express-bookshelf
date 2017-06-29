@@ -25,3 +25,13 @@ require('babel-polyfill');
 // console.log(faker.date.recent());
 // console.log(moment(faker.date.recent()).format('YYYY-MM-DD HH:mm:ss'));
 
+class NotFoundError extends Error {
+  constructor() {
+    super();
+    this.name = 'NotFoundError';
+    this.status = 400;
+  }
+}
+let e = new NotFoundError();
+console.log(e.name);
+console.log(e.name);

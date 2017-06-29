@@ -48,7 +48,7 @@
     "moment": "^2.18.1",
     "mongoose": "^4.11.0",
     "morgan": "^1.8.2",
-    "pq": "0.0.3",
+    "pg": "^6.4.0",
     "serve-favicon": "^2.4.3",
     "socket.io": "^2.0.3",
     "validator": "^7.1.0"

@@ -1,6 +1,7 @@
 import express from 'express';
-import User from '../../models/user';
 import _ from 'lodash';
+import User from '../../models/user';
+import {NotFoundError, BadRequestError} from '../../utils';
 
 const router = express.Router();
 
@@ -57,12 +58,12 @@ router.post('/', (req, res, next) => {
   };
 
   res.validator.validate(body, rules).then(() => {
-    User.forge(body).save().then((user) => {
+    return User.forge(body).save().then((user) => {
       res.status(201).send({
         user
       });
     });
-  }).catch((e) => res.status(400).send(e));
+  }).catch((e) => next(e));
 });
 
 router.patch('/:id', (req, res, next) => {
@@ -99,7 +100,7 @@ router.patch('/:id', (req, res, next) => {
   };
 
   res.validator.validate(body, rules).then(() => {
-    req.user.save(body).then(() => {
+    return req.user.save(body).then(() => {
       res.send({
         user: req.user
       });
@@ -131,17 +132,14 @@ router.delete('/:id', (req, res, next) => {
 
 router.param('id', (req, res, next, id) => {
   if (isNaN(id)) {
-    // return res.status(400).send();
-    let error = new Error(req.__('error.bad request'));
-    error.status = 400;
+    let error = new BadRequestError(req.__('error.bad request'));
     return next(error);
   }
   User.forge({
     id
   }).fetch().then((user) => {
     if (user === null) {
-      let error = new Error(req.__('error.user not found'));
-      error.status = 404;
+      let error = new NotFoundError(req.__('error.user not found'));
       return next(error);
     }
     req.user = user;

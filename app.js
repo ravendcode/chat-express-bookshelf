@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 import hbs from 'hbs';
 // import mongoose from './databases/connections/mongoose';
 import {bookshelf, knex} from './databases/connections/bookshelf';
-import {hbs as hbsUtils, Validator} from './utils';
+import {hbs as hbsUtils, Validator, NotFoundError, InternalServerError} from './utils';
 import routes from './routes';
 
 import config from './config';
@@ -93,25 +93,23 @@ routes(app);
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
-  let err = new Error(req.__('error.not found'));
-  err.status = 404;
+  let err = new NotFoundError(req.__('error.not found'));
   next(err);
 });
 
 // Error handler
 app.use((err, req, res, next) => {
-  let message = err.message;
-  let status = err.status || 500;
-  let error = {
-    message,
-    status,
-  };
-  if (config.env === 'development' && status !== 404 && status !== 400) {
-    error.stack = err.stack;
+  if (err.status === 400 && err.name === 'ValidationError') {
+    return res.status(400).send(err);
   }
-  res.status(status).send({
-    error,
-  });
+  if (err.status === 400 && err.name === 'BadRequestError') {
+    return res.status(400).send(err);
+  }
+  if (err.status === 404 && err.name === 'NotFoundError') {
+    return res.status(404).send(err);
+  }
+  let error = new InternalServerError(err.message);
+  res.status(500).send(error);
 });
 
 export default app;
