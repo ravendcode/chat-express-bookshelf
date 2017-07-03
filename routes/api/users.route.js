@@ -57,7 +57,7 @@ router.post('/', (req, res, next) => {
     },
   };
 
-  res.validator.validate(body, rules).then(() => {
+  req.validator.validate(body, rules).then(() => {
     return User.forge(body).save().then((user) => {
       res.status(201).send({
         user
@@ -99,7 +99,7 @@ router.patch('/:id', (req, res, next) => {
     },
   };
 
-  res.validator.validate(body, rules).then(() => {
+  req.validator.validate(body, rules).then(() => {
     return req.user.save(body).then(() => {
       res.send({
         user: req.user

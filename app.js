@@ -73,7 +73,7 @@ app.use((req, res, next) => {
     res.setLocale(config.locale);
   }
 
-  res.validator = new Validator(res.__);
+  req.validator = new Validator(res.__);
 
   app.locals.app = {
     env: config.env,
