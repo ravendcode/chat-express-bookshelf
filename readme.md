@@ -2,13 +2,14 @@
 
 ### Features
 1. ES6
-2. Validator
-3. Handlebars
-4. I18n
-5. Tests
-6. WebSocket
-7. Bookshelf
-8. Eslint best standart
+2. JWT
+3. Validator
+4. Handlebars
+5. I18n
+6. Tests
+7. WebSocket
+8. Bookshelf
+9. Eslint best standart
 
 ### Usage
 1. Edit `config.js` and `knexfile.js`
