@@ -1,7 +1,10 @@
 import express from 'express';
 import _ from 'lodash';
 import User from '../../models/user';
-import {NotFoundError, BadRequestError} from '../../utils';
+import {
+  NotFoundError,
+  BadRequestError
+} from '../../utils';
 
 const router = express.Router();
 
@@ -11,6 +14,7 @@ router.get('/', (req, res, next) => {
   // req.knex.select().from('users').then((users) => {
   //   res.send({users});
   // }).catch((e) => next(e));
+
 
   User.fetchAll().then((users) => {
     res.send({
@@ -30,6 +34,7 @@ router.get('/:id', (req, res, next) => {
   // User.forge({id: req.params.id}).fetch().then((user) => {
   //   res.send({user});
   // }).catch((e) => next(e));
+
   res.send({
     user: req.user
   });
@@ -59,8 +64,12 @@ router.post('/', (req, res, next) => {
 
   req.validator.validate(body, rules).then(() => {
     return User.forge(body).save().then((user) => {
-      res.status(201).send({
-        user
+      return user.hashPassword().then(() => {
+        return user.generateAuthToken().then((token) => {
+          res.header('x-auth', token).status(201).send({
+            user
+          });
+        });
       });
     });
   }).catch((e) => next(e));

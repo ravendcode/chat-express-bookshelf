@@ -20,6 +20,26 @@ export class BadRequestError extends Error {
   }
 }
 
+export class BadTokenError extends Error {
+  constructor(message) {
+    super();
+    this.error = true;
+    this.status = 401;
+    this.name = 'BadTokenError';
+    this.message = message;
+  }
+}
+
+export class UnauthorizedError extends Error {
+  constructor(message) {
+    super();
+    this.error = true;
+    this.status = 401;
+    this.name = 'UnauthorizedError';
+    this.message = message;
+  }
+}
+
 export class ValidationError extends Error {
   constructor(errors) {
     super();
@@ -27,6 +47,16 @@ export class ValidationError extends Error {
     this.status = 400;
     this.name = 'ValidationError';
     this.errors = errors;
+  }
+}
+
+export class LoginError extends Error {
+  constructor(message) {
+    super();
+    this.error = true;
+    this.status = 400;
+    this.name = 'LoginError';
+    this.message = message;
   }
 }
 

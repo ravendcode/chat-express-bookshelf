@@ -8,6 +8,9 @@ import {
   ValidationError,
   InternalServerError,
   BadRequestError,
+  BadTokenError,
+  UnauthorizedError,
+  LoginError,
 } from './errors.util';
 
 export {
@@ -18,4 +21,7 @@ export {
   ValidationError,
   InternalServerError,
   BadRequestError,
+  BadTokenError,
+  UnauthorizedError,
+  LoginError,
 };

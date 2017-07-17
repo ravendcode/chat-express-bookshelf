@@ -1,5 +1,5 @@
 import path from 'path';
-import http from 'http';
+// import http from 'http';
 import express from 'express';
 import morgan from 'morgan';
 import i18n from 'i18n';
@@ -18,13 +18,13 @@ const app = express();
 if (config.env === 'development') {
   app.use(morgan('dev'));
   // redirect http server
-  app.all('*', function (req, res, next) {
-    if (req.secure) {
-      return next();
-    }
-    res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url);
-  });
-  http.createServer(app).listen(config.httpPort);
+  // app.all('*', function (req, res, next) {
+  //   if (req.secure) {
+  //     return next();
+  //   }
+  //   res.redirect('https://' + req.hostname + ':' + config.httpsPort + req.url);
+  // });
+  // http.createServer(app).listen(config.httpPort);
 }
 
 i18n.configure({
@@ -103,6 +103,15 @@ app.use((err, req, res, next) => {
     return res.status(400).send(err);
   }
   if (err.status === 400 && err.name === 'BadRequestError') {
+    return res.status(400).send(err);
+  }
+  if (err.status === 401 && err.name === 'UnauthorizedError') {
+    return res.status(401).send(err);
+  }
+  if (err.status === 401 && err.name === 'BadTokenError') {
+    return res.status(401).send(err);
+  }
+  if (err.status === 400 && err.name === 'LoginError') {
     return res.status(400).send(err);
   }
   if (err.status === 404 && err.name === 'NotFoundError') {
